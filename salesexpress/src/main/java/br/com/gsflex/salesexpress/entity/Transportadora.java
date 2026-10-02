@@ -12,19 +12,19 @@ public class Transportadora {
 
     @Id
     @GeneratedValue(strategy = GenerationType.IDENTITY)
-    @Column(name = "id_transportadora")
+    @Column(name = "id_transportadora", nullable = false)
     private Long id;
 
-    @Column(name = "nome_transportadora")
+    @Column(name = "nome_transportadora", nullable = false)
     private String nome;
 
-    @Column(name = "valor_shopee")
+    @Column(name = "valor_shopee", nullable = false)
     private BigDecimal valorShopee;
 
-    @Column(name = "valor_mercado_livre")
-    private BigDecimal valorMercadoLivre;
+    @Column(name = "valor_mercado_livre", nullable = false)
+    private BigDecimal valorML;
 
-    @Column(name = "valor_avulso")
+    @Column(name = "valor_avulso", nullable = false)
     private BigDecimal valorAvulso;
 
 }

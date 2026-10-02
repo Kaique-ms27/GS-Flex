@@ -1,14 +1,23 @@
 package br.com.gsflex.salesexpress.entity;
 
 import jakarta.persistence.*;
+import jakarta.validation.constraints.Min;
 import lombok.Data;
 
 import java.math.BigDecimal;
-import java.util.Date;
+import java.time.LocalDate;
 
 @Data
 @Entity
-@Table(name = "registro_diario")
+@Table(
+        name = "registro_diario",
+        uniqueConstraints = {
+                @UniqueConstraint(
+                        name = "uk_registro_transportadora_data",
+                        columnNames = {"transportadora_id", "data"}
+                )
+        }
+)
 public class RegistroDiario {
 
     @Id
@@ -16,28 +25,31 @@ public class RegistroDiario {
     @Column(name = "id_registro_diario")
     private Long id;
 
-    @Column(name = "data")
-    private Date data;
+    @Column(name = "data", nullable = false)
+    private LocalDate data;
 
-    @ManyToOne
-    @JoinColumn(name = "transportadora_registro")
+    @ManyToOne(optional = false)
+    @JoinColumn(name = "transportadora_registro", nullable = false)
     private Transportadora transportadora;
 
-    @Column(name = "quantidade_shopee")
+    @Min(value = 0, message = "A quantidade não pode ser negativa")
+    @Column(name = "quantidade_shopee", nullable = false)
     private Long quantidadeShopee;
 
-    @Column(name = "quantidade_ml")
+    @Min(value = 0, message = "A quantidade não pode ser negativa")
+    @Column(name = "quantidade_ml", nullable = false)
     private Long quantidadeML;
 
-    @Column(name = "quantidade_avulso")
+    @Min(value = 0, message = "A quantidade não pode ser negativa")
+    @Column(name = "quantidade_avulso", nullable = false)
     private Long quantidadeAvulso;
 
-    @Column(name = "valor_shopee")
+    @Column(name = "valor_shopee", nullable = false)
     private BigDecimal valorShopee;
 
-    @Column(name = "valor_mercado_livre")
+    @Column(name = "valor_mercado_livre", nullable = false)
     private BigDecimal valorML;
 
-    @Column(name = "valor_avulso")
+    @Column(name = "valor_avulso", nullable = false)
     private BigDecimal valorAvulso;
 }

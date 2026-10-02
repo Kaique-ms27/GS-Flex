@@ -1179,22 +1179,21 @@ Essa funcionalidade não faz parte do MVP inicial.
 * [X] Criar `Transportadora`
 * [X] Criar `RegistroDiario`
 * [X] Criar relacionamento
-* [ ] Criar constraints
-* [ ] Criar repositories
+* [X] Criar constraints
+* [X] Criar repositories
 
 ---
 
 ## Fase 3 — Transportadoras
 
-* [ ] Criar DTOs
-* [ ] Criar Service
-* [ ] Criar Controller
-* [ ] Implementar cadastro
-* [ ] Implementar listagem
-* [ ] Implementar consulta
-* [ ] Implementar edição
-* [ ] Implementar exclusão
-* [ ] Testar no Postman
+* [X] Criar DTOs
+* [X] Criar Service
+* [X] Criar Controller
+* [X] Implementar cadastro
+* [X] Implementar listagem
+* [X] Implementar edição
+* [X] Implementar exclusão
+* [X] Testar no Postman
 
 ---
 
