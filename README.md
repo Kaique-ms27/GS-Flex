@@ -1166,19 +1166,19 @@ Essa funcionalidade não faz parte do MVP inicial.
 
 ## Fase 1 — Configuração
 
-* [ ] Criar projeto Spring Boot
-* [ ] Configurar Maven
-* [ ] Configurar PostgreSQL
-* [ ] Configurar Docker
-* [ ] Configurar `application.properties`
+* [X] Criar projeto Spring Boot
+* [X] Configurar Maven
+* [X] Configurar PostgreSQL
+* [X] Configurar Docker
+* [X] Configurar `application.properties`
 
 ---
 
 ## Fase 2 — Modelagem
 
-* [ ] Criar `Transportadora`
-* [ ] Criar `RegistroDiario`
-* [ ] Criar relacionamento
+* [X] Criar `Transportadora`
+* [X] Criar `RegistroDiario`
+* [X] Criar relacionamento
 * [ ] Criar constraints
 * [ ] Criar repositories
 
