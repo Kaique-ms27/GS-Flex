@@ -10,6 +10,7 @@ import jakarta.transaction.Transactional;
 import lombok.AllArgsConstructor;
 import org.springframework.stereotype.Service;
 
+import java.time.LocalDate;
 import java.util.List;
 
 @Service
@@ -69,5 +70,21 @@ public class RegistroDiarioService {
                 registo.getValorML(),
                 registo.getValorAvulso()
         );
+    }
+
+    public List<RegistroDiarioResponseDto> buscarPorData(
+            LocalDate dataInicial, LocalDate dataFinal) {
+
+        if (dataInicial.isAfter(dataFinal)) {
+            throw new IllegalArgumentException(
+                    "A data inicial não pode ser maior que a data final"
+            );
+        }
+
+        return rRepository.findByDataBetween(dataInicial, dataFinal)
+                .stream()
+                .map(this::toResponse)
+                .toList();
+
     }
 }

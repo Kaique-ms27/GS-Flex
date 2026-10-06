@@ -1199,14 +1199,14 @@ Essa funcionalidade não faz parte do MVP inicial.
 
 ## Fase 4 — Registros
 
-* [ ] Criar DTOs
-* [ ] Criar Service
-* [ ] Criar Controller
-* [ ] Criar registro
-* [ ] Editar registro
+* [X] Criar DTOs
+* [X] Criar Service
+* [X] Criar Controller
+* [X] Criar registro
+* [X] Editar registro
 * [ ] Consultar por data
 * [ ] Consultar por período
-* [ ] Validar duplicidade
+* [X] Validar duplicidade
 * [ ] Validar quantidades
 * [ ] Testar no Postman
 
