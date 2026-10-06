@@ -18,7 +18,6 @@ import java.util.List;
 public class TransportadoraController {
 
     private TransportadoraService service;
-    private TransportadoraRepository repository;
 
     // Salvar Transportadora
     @PostMapping
