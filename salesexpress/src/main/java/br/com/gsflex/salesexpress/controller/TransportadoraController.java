@@ -2,8 +2,8 @@ package br.com.gsflex.salesexpress.controller;
 
 import br.com.gsflex.salesexpress.dto.request.TransportadoraRequestDto;
 import br.com.gsflex.salesexpress.dto.response.TransportadoraResponseDto;
-import br.com.gsflex.salesexpress.repository.TransportadoraRepository;
 import br.com.gsflex.salesexpress.service.TransportadoraService;
+import jakarta.validation.Valid;
 import lombok.AllArgsConstructor;
 import lombok.extern.slf4j.Slf4j;
 import org.springframework.web.bind.annotation.*;
@@ -21,7 +21,7 @@ public class TransportadoraController {
 
     // Salvar Transportadora
     @PostMapping
-    public List<TransportadoraResponseDto> salvarTransportadora (@RequestBody TransportadoraRequestDto request) {
+    public List<TransportadoraResponseDto> salvarTransportadora (@Valid @RequestBody TransportadoraRequestDto request) {
         return service.salvarTransportadora(request);
     }
 

@@ -14,7 +14,7 @@ import java.time.LocalDate;
         uniqueConstraints = {
                 @UniqueConstraint(
                         name = "uk_registro_transportadora_data",
-                        columnNames = {"transportadora_id", "data"}
+                        columnNames = {"transportadora_registro", "data"}
                 )
         }
 )
@@ -52,4 +52,27 @@ public class RegistroDiario {
 
     @Column(name = "valor_avulso", nullable = false)
     private BigDecimal valorAvulso;
+
+    // ---- Regras de cálculo (README: "Regras de cálculo") ----
+    // Usam os valores preservados no registro, nunca os valores atuais da transportadora.
+
+    public BigDecimal totalShopee() {
+        return valorShopee.multiply(BigDecimal.valueOf(quantidadeShopee));
+    }
+
+    public BigDecimal totalML() {
+        return valorML.multiply(BigDecimal.valueOf(quantidadeML));
+    }
+
+    public BigDecimal totalAvulso() {
+        return valorAvulso.multiply(BigDecimal.valueOf(quantidadeAvulso));
+    }
+
+    public BigDecimal total() {
+        return totalShopee().add(totalML()).add(totalAvulso());
+    }
+
+    public long totalPedidos() {
+        return quantidadeShopee + quantidadeML + quantidadeAvulso;
+    }
 }

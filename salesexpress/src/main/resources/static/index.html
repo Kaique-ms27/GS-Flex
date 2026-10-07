@@ -1,0 +1,235 @@
+<!DOCTYPE html>
+<html lang="pt-BR">
+<head>
+<meta charset="utf-8">
+<meta name="viewport" content="width=device-width,initial-scale=1">
+<title>GS Flex</title>
+<style>
+:root{--bg:#eef0ec;--card:#fff;--tx:#16211c;--mut:#667068;--bd:#d6dad3;--pri:#0f6b4f;--on:#fff;--hi:#f3d37a;--err:#b3261e}
+@media(prefers-color-scheme:dark){:root{--bg:#111613;--card:#1a211d;--tx:#e6ebe7;--mut:#94a09a;--bd:#2c3631;--pri:#4fbf94;--on:#06140e;--hi:#5a4a14;--err:#ff8a80}}
+*{box-sizing:border-box}
+body{margin:0;font:15px/1.45 "Segoe UI",system-ui,sans-serif;background:var(--bg);color:var(--tx);font-variant-numeric:tabular-nums}
+header{background:var(--card);border-bottom:1px solid var(--bd);padding:10px 16px;display:flex;flex-wrap:wrap;gap:10px 24px;align-items:center}
+h1{font:700 19px Georgia,serif;margin:0}
+nav{display:flex;gap:2px;flex-wrap:wrap}
+nav button{background:none;border:0;border-bottom:3px solid transparent;padding:8px 12px;font:inherit;color:var(--mut);cursor:pointer}
+nav button.on{color:var(--tx);border-color:var(--pri);font-weight:600}
+main{max-width:980px;margin:0 auto;padding:16px}
+.bar{display:flex;flex-wrap:wrap;gap:8px;align-items:end;margin-bottom:14px}
+label{display:flex;flex-direction:column;font-size:13px;color:var(--mut);gap:3px}
+input,select{font:inherit;padding:7px 9px;border:1px solid var(--bd);border-radius:6px;background:var(--card);color:var(--tx)}
+button.b{font:inherit;padding:8px 14px;border-radius:6px;border:1px solid var(--bd);background:var(--card);color:var(--tx);cursor:pointer}
+button.p{background:var(--pri);color:var(--on);border-color:var(--pri);font-weight:600}
+button.d{color:var(--err)}
+:focus-visible{outline:2px solid var(--pri);outline-offset:2px}
+.cards{display:grid;grid-template-columns:repeat(auto-fit,minmax(190px,1fr));gap:10px;margin-bottom:16px}
+.k{background:var(--card);border:1px solid var(--bd);border-radius:6px;padding:12px}
+.k small{color:var(--mut);display:block}.k b{font-size:20px}.k i{font-style:normal;color:var(--mut);font-size:13px}
+.k.t{background:var(--hi);border-color:transparent}
+.w{overflow-x:auto;background:var(--card);border:1px solid var(--bd);border-radius:6px;margin-bottom:14px}
+table{width:100%;border-collapse:collapse}
+th,td{padding:8px 10px;text-align:right;border-bottom:1px solid var(--bd);white-space:nowrap}
+th:first-child,td:first-child{text-align:left}th{font-size:13px;color:var(--mut);font-weight:600}
+td input{width:90px;text-align:right}
+.v{display:none}.v.on{display:block}
+.empty{padding:18px;color:var(--mut);text-align:center}
+#toast{position:fixed;bottom:16px;left:50%;transform:translateX(-50%);background:var(--pri);color:var(--on);padding:10px 16px;border-radius:6px;display:none;max-width:90%}
+#toast.e{background:var(--err);color:#fff}
+</style>
+</head>
+<body>
+<header>
+  <h1>GS Flex</h1>
+  <nav id="nav">
+    <button data-t="dash">Dashboard</button><button data-t="lanc">Lançamento</button>
+    <button data-t="hist">Histórico</button><button data-t="rel">Relatórios</button>
+    <button data-t="transp">Transportadoras</button>
+  </nav>
+</header>
+<main>
+  <div class="bar" id="per">
+    <label>De<input type="date" id="ini"></label>
+    <label>Até<input type="date" id="fim"></label>
+    <button class="b" onclick="quinz(1)">1ª quinzena</button>
+    <button class="b" onclick="quinz(2)">2ª quinzena</button>
+    <button class="b p" onclick="show()">Atualizar</button>
+  </div>
+
+  <section class="v" id="v-dash"></section>
+
+  <section class="v" id="v-lanc">
+    <div class="bar">
+      <label>Data<input type="date" id="ldata"></label>
+      <button class="b p" onclick="salvarDia()">Salvar dia</button>
+    </div>
+    <div class="w"><table><thead><tr><th>Transportadora</th><th>Shopee</th><th>Mercado Livre</th><th>Avulso</th></tr></thead><tbody id="lbody"></tbody></table></div>
+  </section>
+
+  <section class="v" id="v-hist"></section>
+
+  <section class="v" id="v-rel">
+    <div class="bar">
+      <label>Transportadora<select id="rt"></select></label>
+      <button class="b p" onclick="gerarPdf()">Baixar PDF do período</button>
+    </div>
+  </section>
+
+  <section class="v" id="v-transp">
+    <div class="bar">
+      <input type="hidden" id="tid">
+      <label>Nome<input id="tn"></label>
+      <label>Shopee (R$)<input id="ts" type="number" step="0.01" min="0"></label>
+      <label>Mercado Livre (R$)<input id="tm" type="number" step="0.01" min="0"></label>
+      <label>Avulso (R$)<input id="ta" type="number" step="0.01" min="0"></label>
+      <button class="b p" onclick="salvarT()">Salvar transportadora</button>
+      <button class="b" onclick="limparT()">Limpar</button>
+    </div>
+    <div class="w"><table><thead><tr><th>Nome</th><th>Shopee</th><th>Mercado Livre</th><th>Avulso</th><th></th></tr></thead><tbody id="tbody"></tbody></table></div>
+  </section>
+</main>
+<div id="toast"></div>
+
+<script>
+const $ = s => document.querySelector(s);
+const brl = v => new Intl.NumberFormat('pt-BR', {style:'currency', currency:'BRL'}).format(v || 0);
+const esc = s => String(s).replace(/[&<>"]/g, c => ({'&':'&amp;','<':'&lt;','>':'&gt;','"':'&quot;'}[c]));
+const iso = d => `${d.getFullYear()}-${String(d.getMonth()+1).padStart(2,'0')}-${String(d.getDate()).padStart(2,'0')}`;
+const br = s => s.split('-').reverse().join('/');
+let T = [], tab = 'dash';
+
+function toast(m, err) {
+  const t = $('#toast'); t.textContent = m; t.className = err ? 'e' : ''; t.style.display = 'block';
+  clearTimeout(toast.h); toast.h = setTimeout(() => t.style.display = 'none', 3500);
+}
+
+async function api(url, opt = {}) {
+  const r = await fetch('/v1' + url, {headers: {'Content-Type': 'application/json'}, ...opt});
+  if (!r.ok) {
+    let m = 'Erro ' + r.status;
+    try { m = (await r.json()).message || m; } catch (e) {}
+    throw new Error(m);
+  }
+  return (r.headers.get('content-type') || '').includes('pdf') ? r.blob() : r.json();
+}
+
+function quinz(n) {
+  const d = new Date(), y = d.getFullYear(), m = d.getMonth();
+  $('#ini').value = iso(new Date(y, m, n == 1 ? 1 : 16));
+  $('#fim').value = iso(n == 1 ? new Date(y, m, 15) : new Date(y, m + 1, 0));
+  show();
+}
+
+async function show(t) {
+  if (t) tab = t;
+  document.querySelectorAll('.v').forEach(e => e.classList.toggle('on', e.id == 'v-' + tab));
+  document.querySelectorAll('nav button').forEach(b => b.classList.toggle('on', b.dataset.t == tab));
+  $('#per').style.display = ['dash', 'hist', 'rel'].includes(tab) ? 'flex' : 'none';
+  try {
+    if (!T.length) T = await api('/transportadora');
+    await ({dash, lanc, hist, rel, transp})[tab]();
+  } catch (e) { toast(e.message, true); }
+}
+
+const periodo = () => `inicio=${$('#ini').value}&fim=${$('#fim').value}`;
+
+async function dash() {
+  const d = await api('/dashboard?' + periodo());
+  const k = (t, v, s, c) => `<div class="k ${c || ''}"><small>${t}</small><b>${v}</b><br><i>${s}</i></div>`;
+  $('#v-dash').innerHTML = `<div class="cards">
+    ${k('Total a receber', brl(d.totalReceber), d.totalPedidos + ' pedidos', 't')}
+    ${k('Shopee', brl(d.totalShopee), d.quantidadeShopee + ' pedidos')}
+    ${k('Mercado Livre', brl(d.totalML), d.quantidadeML + ' pedidos')}
+    ${k('Avulso', brl(d.totalAvulso), d.quantidadeAvulso + ' pedidos')}</div>
+    <div class="w"><table><thead><tr><th>Transportadora</th><th>Pedidos</th><th>A receber</th></tr></thead><tbody>
+    ${d.transportadoras.map(t => `<tr><td>${esc(t.nome)}</td><td>${t.totalPedidos}</td><td>${brl(t.totalReceber)}</td></tr>`).join('')
+      || '<tr><td colspan="3" class="empty">Sem lançamentos neste período. Use a aba Lançamento para registrar pedidos.</td></tr>'}
+    </tbody></table></div>`;
+}
+
+async function lanc() {
+  const dt = $('#ldata').value;
+  const ex = await api(`/registro/diario?dataInicial=${dt}&dataFinal=${dt}`);
+  const m = {}; ex.forEach(r => m[r.transportadora] = r);
+  $('#lbody').innerHTML = T.map(t => {
+    const r = m[t.id] || {};
+    const f = k => `<td><input type="number" min="0" value="${r[k] ?? ''}"></td>`;
+    return `<tr data-id="${t.id}" data-ex="${r.id ? 1 : 0}"><td>${esc(t.nome)}</td>${f('quantidaeShopee')}${f('quantidadeML')}${f('quantidadeAvulso')}</tr>`;
+  }).join('') || '<tr><td colspan="4" class="empty">Cadastre uma transportadora antes de lançar pedidos.</td></tr>';
+}
+
+async function salvarDia() {
+  const data = $('#ldata').value, registros = [];
+  document.querySelectorAll('#lbody tr[data-id]').forEach(tr => {
+    const [s, m, a] = [...tr.querySelectorAll('input')].map(i => parseInt(i.value) || 0);
+    if (s + m + a > 0 || tr.dataset.ex == '1')
+      registros.push({data, transportadoraId: +tr.dataset.id, quantidadeShopee: s, quantidadeML: m, quantidadeAvulso: a});
+  });
+  if (!registros.length) return toast('Informe ao menos uma quantidade.', true);
+  try { await api('/registro/diario', {method: 'PUT', body: JSON.stringify({data, registros})}); toast('Dia ' + br(data) + ' salvo.'); lanc(); }
+  catch (e) { toast(e.message, true); }
+}
+
+async function hist() {
+  const rs = await api(`/registro/diario?dataInicial=${$('#ini').value}&dataFinal=${$('#fim').value}`);
+  const nome = id => (T.find(t => t.id == id) || {nome: '#' + id}).nome;
+  rs.sort((a, b) => a.data.localeCompare(b.data) || nome(a.transportadora).localeCompare(nome(b.transportadora)));
+  $('#v-hist').innerHTML = `<div class="w"><table><thead><tr><th>Data</th><th>Transportadora</th><th>Shopee</th><th>ML</th><th>Avulso</th><th>Total</th><th></th></tr></thead><tbody>
+    ${rs.map(r => `<tr><td>${br(r.data)}</td><td>${esc(nome(r.transportadora))}</td><td>${r.quantidaeShopee}</td><td>${r.quantidadeML}</td><td>${r.quantidadeAvulso}</td>
+      <td>${brl(r.quantidaeShopee * r.valorShopee + r.quantidadeML * r.valorML + r.quantidadeAvulso * r.valorAvulso)}</td>
+      <td><button class="b" onclick="$('#ldata').value='${r.data}';show('lanc')">Editar dia</button></td></tr>`).join('')
+      || '<tr><td colspan="7" class="empty">Nenhum registro neste período.</td></tr>'}</tbody></table></div>`;
+}
+
+async function rel() {
+  const s = $('#rt'), v = s.value;
+  s.innerHTML = T.map(t => `<option value="${t.id}">${esc(t.nome)}</option>`).join('');
+  if (v) s.value = v;
+}
+
+async function gerarPdf() {
+  const id = $('#rt').value;
+  if (!id) return toast('Selecione uma transportadora.', true);
+  try {
+    const b = await api(`/relatorio/transportadora/${id}?` + periodo());
+    const a = document.createElement('a');
+    a.href = URL.createObjectURL(b); a.download = `relatorio-${id}-${$('#ini').value}-${$('#fim').value}.pdf`; a.click();
+    toast('Relatório gerado.');
+  } catch (e) { toast(e.message, true); }
+}
+
+function transp() {
+  $('#tbody').innerHTML = T.map(t => `<tr><td>${esc(t.nome)}</td><td>${brl(t.valorShopee)}</td><td>${brl(t.valorML)}</td><td>${brl(t.valorAvulso)}</td>
+    <td><button class="b" onclick="editarT(${t.id})">Editar</button> <button class="b d" onclick="excluirT(${t.id})">Excluir</button></td></tr>`).join('')
+    || '<tr><td colspan="5" class="empty">Nenhuma transportadora cadastrada. Preencha o formulário acima.</td></tr>';
+}
+
+function limparT() { ['tid', 'tn', 'ts', 'tm', 'ta'].forEach(i => $('#' + i).value = ''); }
+
+function editarT(id) {
+  const t = T.find(x => x.id == id);
+  $('#tid').value = t.id; $('#tn').value = t.nome; $('#ts').value = t.valorShopee; $('#tm').value = t.valorML; $('#ta').value = t.valorAvulso;
+  $('#tn').focus();
+}
+
+async function salvarT() {
+  const id = $('#tid').value;
+  const body = JSON.stringify({nome: $('#tn').value.trim(), valorShopee: $('#ts').value, valorML: $('#tm').value, valorAvulso: $('#ta').value});
+  try {
+    T = await api('/transportadora' + (id ? '/' + id : ''), {method: id ? 'PATCH' : 'POST', body});
+    toast('Transportadora salva.'); limparT(); transp();
+  } catch (e) { toast(e.message, true); }
+}
+
+async function excluirT(id) {
+  if (!confirm('Excluir esta transportadora?')) return;
+  try { T = await api('/transportadora/' + id, {method: 'DELETE'}); toast('Transportadora excluída.'); transp(); }
+  catch (e) { toast(e.message, true); }
+}
+
+document.querySelectorAll('nav button').forEach(b => b.onclick = () => show(b.dataset.t));
+$('#ldata').value = iso(new Date());
+$('#ldata').onchange = () => lanc().catch(e => toast(e.message, true));
+quinz(new Date().getDate() <= 15 ? 1 : 2);
+</script>
+</body>
+</html>

@@ -19,4 +19,10 @@ public interface RegistroDiarioRepository extends JpaRepository<RegistroDiario, 
             LocalDate dataInicial,
             LocalDate dataFinal
     );
+
+    List<RegistroDiario> findByTransportadoraIdAndDataBetweenOrderByData(
+            Long transportadoraId,
+            LocalDate dataInicial,
+            LocalDate dataFinal
+    );
 }

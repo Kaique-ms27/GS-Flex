@@ -5,6 +5,8 @@ import br.com.gsflex.salesexpress.dto.request.RegistroDiarioRequestDto;
 import br.com.gsflex.salesexpress.dto.response.RegistroDiarioResponseDto;
 import br.com.gsflex.salesexpress.entity.RegistroDiario;
 import br.com.gsflex.salesexpress.entity.Transportadora;
+import br.com.gsflex.salesexpress.exception.BusinessException;
+import br.com.gsflex.salesexpress.exception.ResourceNotFoundException;
 import br.com.gsflex.salesexpress.repository.RegistroDiarioRepository;
 import br.com.gsflex.salesexpress.repository.TransportadoraRepository;
 import jakarta.transaction.Transactional;
@@ -33,8 +35,8 @@ public class RegistroDiarioService {
             if(!idsVistos.add(dto.transportadoraId())) {
                 Transportadora transportadora = tRepository.findById(dto.transportadoraId())
                         .orElseThrow(() ->
-                                new RuntimeException("Transportadora não encontrada com ID: " + dto.transportadoraId()));
-                throw new RuntimeException(
+                                new ResourceNotFoundException("Transportadora não encontrada com ID: " + dto.transportadoraId()));
+                throw new BusinessException(
                         "A transportadora " + transportadora.getNome() + " está duplicada na requisição");
             }
         }
@@ -44,7 +46,7 @@ public class RegistroDiarioService {
                     Transportadora transportadora =
                             tRepository.findById(registroRequest.transportadoraId())
                                     .orElseThrow(() ->
-                                            new RuntimeException("Transportadora não encontrada"));
+                                            new ResourceNotFoundException("Transportadora não encontrada"));
 
 
                     RegistroDiario registro =
@@ -52,11 +54,11 @@ public class RegistroDiarioService {
                                     .orElseGet(RegistroDiario::new);
 
                     if (registroRequest.quantidadeShopee() < 0) {
-                        throw new RuntimeException("Quantidade de Shopee inválida");
+                        throw new BusinessException("Quantidade de Shopee inválida");
                     } else if (registroRequest.quantidadeAvulso() < 0) {
-                        throw new RuntimeException("Quantidade de Avulso inválida");
+                        throw new BusinessException("Quantidade de Avulso inválida");
                     } else if (registroRequest.quantidadeML() < 0) {
-                        throw new RuntimeException("Quantidade de ML inválida");
+                        throw new BusinessException("Quantidade de ML inválida");
                     }
 
                     boolean novoRegistro = registro.getId() == null;

@@ -3,6 +3,8 @@ package br.com.gsflex.salesexpress.service;
 import br.com.gsflex.salesexpress.dto.request.TransportadoraRequestDto;
 import br.com.gsflex.salesexpress.dto.response.TransportadoraResponseDto;
 import br.com.gsflex.salesexpress.entity.Transportadora;
+import br.com.gsflex.salesexpress.exception.BusinessException;
+import br.com.gsflex.salesexpress.exception.ResourceNotFoundException;
 import br.com.gsflex.salesexpress.repository.TransportadoraRepository;
 import lombok.AllArgsConstructor;
 import org.springframework.stereotype.Service;
@@ -19,7 +21,7 @@ public class TransportadoraService {
     public List<TransportadoraResponseDto> salvarTransportadora(TransportadoraRequestDto request) {
 
         if (repository.existsByNomeIgnoreCase(request.nome())) {
-            throw new RuntimeException("Já existe uma transportadora com este nome");
+            throw new BusinessException("Já existe uma transportadora com este nome");
         }
 
         Transportadora transportadora = new Transportadora();
@@ -48,7 +50,7 @@ public class TransportadoraService {
     public List<TransportadoraResponseDto> atualizarTransportadora(Long id, TransportadoraRequestDto request) {
 
         Transportadora transportadoraAtualizada = repository.findById(id)
-                .orElseThrow( () -> new RuntimeException("Transportadora não encontrada"));
+                .orElseThrow( () -> new ResourceNotFoundException("Transportadora não encontrada"));
 
         if (request.nome() != null) {
             transportadoraAtualizada.setNome(request.nome());
@@ -76,7 +78,7 @@ public class TransportadoraService {
     // Delete
     public List<TransportadoraResponseDto> deletarTransportadora(Long id) {
         Transportadora transportadora = repository.findById(id)
-                .orElseThrow( () -> new RuntimeException("Transportadora não encontrada"));
+                .orElseThrow( () -> new ResourceNotFoundException("Transportadora não encontrada"));
 
         repository.delete(transportadora);
 
