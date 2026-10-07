@@ -1204,11 +1204,11 @@ Essa funcionalidade não faz parte do MVP inicial.
 * [X] Criar Controller
 * [X] Criar registro
 * [X] Editar registro
-* [ ] Consultar por data
-* [ ] Consultar por período
+* [X] Consultar por data
+* [X] Consultar por período
 * [X] Validar duplicidade
-* [ ] Validar quantidades
-* [ ] Testar no Postman
+* [X] Validar quantidades
+* [X] Testar no Postman
 
 ---
 

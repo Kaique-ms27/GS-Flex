@@ -1,6 +1,7 @@
 package br.com.gsflex.salesexpress.service;
 
 import br.com.gsflex.salesexpress.dto.request.RegistroDiarioLoteRequestDto;
+import br.com.gsflex.salesexpress.dto.request.RegistroDiarioRequestDto;
 import br.com.gsflex.salesexpress.dto.response.RegistroDiarioResponseDto;
 import br.com.gsflex.salesexpress.entity.RegistroDiario;
 import br.com.gsflex.salesexpress.entity.Transportadora;
@@ -11,7 +12,9 @@ import lombok.AllArgsConstructor;
 import org.springframework.stereotype.Service;
 
 import java.time.LocalDate;
+import java.util.HashSet;
 import java.util.List;
+import java.util.Set;
 
 @Service
 @AllArgsConstructor
@@ -24,7 +27,17 @@ public class RegistroDiarioService {
     public List<RegistroDiarioResponseDto> salvarRegistroDia(
             RegistroDiarioLoteRequestDto request
     ) {
-        System.out.println(request);
+
+        Set<Long> idsVistos = new HashSet<>();
+        for (RegistroDiarioRequestDto dto : request.registros()) {
+            if(!idsVistos.add(dto.transportadoraId())) {
+                Transportadora transportadora = tRepository.findById(dto.transportadoraId())
+                        .orElseThrow(() ->
+                                new RuntimeException("Transportadora não encontrada com ID: " + dto.transportadoraId()));
+                throw new RuntimeException(
+                        "A transportadora " + transportadora.getNome() + " está duplicada na requisição");
+            }
+        }
         return request.registros()
                 .stream()
                 .map(registroRequest -> {
@@ -37,6 +50,14 @@ public class RegistroDiarioService {
                     RegistroDiario registro =
                             rRepository.findByDataAndTransportadora(request.data(),transportadora)
                                     .orElseGet(RegistroDiario::new);
+
+                    if (registroRequest.quantidadeShopee() < 0) {
+                        throw new RuntimeException("Quantidade de Shopee inválida");
+                    } else if (registroRequest.quantidadeAvulso() < 0) {
+                        throw new RuntimeException("Quantidade de Avulso inválida");
+                    } else if (registroRequest.quantidadeML() < 0) {
+                        throw new RuntimeException("Quantidade de ML inválida");
+                    }
 
                     boolean novoRegistro = registro.getId() == null;
 
