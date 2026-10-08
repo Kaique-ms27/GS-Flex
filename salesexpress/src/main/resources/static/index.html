@@ -3,48 +3,89 @@
 <head>
 <meta charset="utf-8">
 <meta name="viewport" content="width=device-width,initial-scale=1">
-<title>GS Flex</title>
+<title>Sales Express</title>
 <style>
-:root{--bg:#eef0ec;--card:#fff;--tx:#16211c;--mut:#667068;--bd:#d6dad3;--pri:#0f6b4f;--on:#fff;--hi:#f3d37a;--err:#b3261e}
-@media(prefers-color-scheme:dark){:root{--bg:#111613;--card:#1a211d;--tx:#e6ebe7;--mut:#94a09a;--bd:#2c3631;--pri:#4fbf94;--on:#06140e;--hi:#5a4a14;--err:#ff8a80}}
+:root{--bg:#f4f4f4;--card:#fff;--tx:#0a0a0a;--mut:#555;--bd:#e0e0e0;--pri:#d0101a;--on:#fff;--blk:#0a0a0a;--err:#d0101a}
 *{box-sizing:border-box}
 body{margin:0;font:15px/1.45 "Segoe UI",system-ui,sans-serif;background:var(--bg);color:var(--tx);font-variant-numeric:tabular-nums}
-header{background:var(--card);border-bottom:1px solid var(--bd);padding:10px 16px;display:flex;flex-wrap:wrap;gap:10px 24px;align-items:center}
-h1{font:700 19px Georgia,serif;margin:0}
-nav{display:flex;gap:2px;flex-wrap:wrap}
-nav button{background:none;border:0;border-bottom:3px solid transparent;padding:8px 12px;font:inherit;color:var(--mut);cursor:pointer}
-nav button.on{color:var(--tx);border-color:var(--pri);font-weight:600}
+header{background:var(--blk);border-bottom:4px solid var(--pri);padding:10px 16px;display:flex;flex-wrap:wrap;gap:10px 24px;align-items:center}
+h1{font:900 19px "Arial Black",Arial,sans-serif;margin:0;color:#fff;letter-spacing:.3px}
+h1 em{font-style:normal;color:var(--pri)}
+nav{display:flex;gap:6px;flex-wrap:wrap}
+nav button{background:var(--blk);border:1px solid #2e2e2e;border-radius:6px;padding:8px 12px;font:inherit;font-weight:700;color:#e8e8e8;cursor:pointer}
+nav button:hover{border-color:#555}
+nav button.on{background:var(--pri);border-color:var(--pri);color:#fff}
+.who{margin-left:auto;display:flex;gap:10px;align-items:center;color:#bbb;font-size:14px;font-weight:600}
+.who button.b{background:transparent;color:#fff;border-color:#444}
 main{max-width:980px;margin:0 auto;padding:16px}
 .bar{display:flex;flex-wrap:wrap;gap:8px;align-items:end;margin-bottom:14px}
-label{display:flex;flex-direction:column;font-size:13px;color:var(--mut);gap:3px}
-input,select{font:inherit;padding:7px 9px;border:1px solid var(--bd);border-radius:6px;background:var(--card);color:var(--tx)}
-button.b{font:inherit;padding:8px 14px;border-radius:6px;border:1px solid var(--bd);background:var(--card);color:var(--tx);cursor:pointer}
-button.p{background:var(--pri);color:var(--on);border-color:var(--pri);font-weight:600}
-button.d{color:var(--err)}
+label{display:flex;flex-direction:column;font-size:13px;color:var(--mut);gap:3px;font-weight:600}
+input,select{font:inherit;padding:7px 9px;border:1px solid #cfcfcf;border-radius:6px;background:var(--card);color:var(--tx)}
+button.b{font:inherit;font-weight:600;padding:8px 14px;border-radius:6px;border:1px solid #cfcfcf;background:var(--card);color:var(--tx);cursor:pointer}
+button.b:hover{border-color:var(--blk)}
+button.p{background:var(--blk);color:#fff;border-color:var(--blk);font-weight:700}
+button.p:hover{background:var(--pri);border-color:var(--pri)}
+button.d{color:var(--pri)}
 :focus-visible{outline:2px solid var(--pri);outline-offset:2px}
 .cards{display:grid;grid-template-columns:repeat(auto-fit,minmax(190px,1fr));gap:10px;margin-bottom:16px}
-.k{background:var(--card);border:1px solid var(--bd);border-radius:6px;padding:12px}
-.k small{color:var(--mut);display:block}.k b{font-size:20px}.k i{font-style:normal;color:var(--mut);font-size:13px}
-.k.t{background:var(--hi);border-color:transparent}
+.k{background:var(--card);border:1px solid var(--bd);border-top:3px solid var(--pri);border-radius:6px;padding:12px}
+.k small{color:var(--mut);display:block;font-weight:700}.k b{font-size:22px;font-weight:900}.k i{font-style:normal;color:var(--mut);font-size:13px}
+.k.t{background:var(--pri);border-color:var(--pri);color:#fff}
+.k.t small,.k.t i{color:#ffd9db}
 .w{overflow-x:auto;background:var(--card);border:1px solid var(--bd);border-radius:6px;margin-bottom:14px}
 table{width:100%;border-collapse:collapse}
 th,td{padding:8px 10px;text-align:right;border-bottom:1px solid var(--bd);white-space:nowrap}
-th:first-child,td:first-child{text-align:left}th{font-size:13px;color:var(--mut);font-weight:600}
+th:first-child,td:first-child{text-align:left}th{font-size:13px;color:#fff;background:var(--blk);font-weight:700}
 td input{width:90px;text-align:right}
 .v{display:none}.v.on{display:block}
 .empty{padding:18px;color:var(--mut);text-align:center}
-#toast{position:fixed;bottom:16px;left:50%;transform:translateX(-50%);background:var(--pri);color:var(--on);padding:10px 16px;border-radius:6px;display:none;max-width:90%}
-#toast.e{background:var(--err);color:#fff}
+#toast{position:fixed;bottom:16px;left:50%;transform:translateX(-50%);background:var(--blk);color:#fff;padding:10px 16px;border-radius:6px;border-left:4px solid var(--pri);display:none;max-width:90%;z-index:10}
+#toast.e{background:var(--pri);color:#fff;border-left-color:var(--blk)}
+.g{background:var(--card);border:1px solid var(--bd);border-top:3px solid var(--pri);border-radius:6px;padding:14px;margin-bottom:14px}
+.g h2{margin:0 0 12px;font:900 15px "Arial Black",Arial,sans-serif}
+.hb{display:grid;grid-template-columns:minmax(80px,140px) 1fr 56px;gap:8px;align-items:center;margin:7px 0;font-size:14px}
+.hb .n{overflow:hidden;text-overflow:ellipsis;white-space:nowrap;font-weight:600}
+.hb .tr{background:var(--bg);border-radius:4px;height:20px;overflow:hidden}
+.hb .fl{height:100%;background:var(--pri);border-radius:4px;min-width:2px}
+.hb .q{text-align:right;font-weight:700}
+.vc{display:flex;align-items:flex-end;gap:4px;height:190px;border-bottom:2px solid var(--blk);padding-top:16px}
+.vc .c{flex:1;min-width:0;height:100%;display:flex;flex-direction:column;justify-content:flex-end;align-items:center}
+.vc .c b{font-size:11px;font-weight:700;margin-bottom:2px}
+.vc .bar{width:100%;background:var(--pri);border-radius:3px 3px 0 0;min-height:2px;margin:0}
+.vc .bar.z{background:#d9d9d9}
+.vl{display:flex;gap:4px;margin-top:4px}
+.vl span{flex:1;min-width:0;text-align:center;font-size:11px;color:var(--mut)}
+.vs{overflow-x:auto}
+.vs>div{min-width:100%}
+#app{display:none}
+#login{display:none;min-height:100vh;align-items:center;justify-content:center;padding:16px}
+#login form{background:var(--card);border:1px solid var(--bd);border-top:4px solid var(--pri);border-radius:6px;padding:24px;width:100%;max-width:340px;display:flex;flex-direction:column;gap:12px}
+#login h1{text-align:center;margin-bottom:4px;color:var(--tx)}
+#login .err{color:var(--pri);font-size:13px;min-height:18px;text-align:center;font-weight:600}
+.note{color:var(--mut);font-size:13px;margin:0 0 14px}
 </style>
 </head>
 <body>
+
+<div id="login">
+  <form onsubmit="entrar(event)">
+    <h1>SALES <em>EXPRESS</em></h1>
+    <label>Usuário<input id="lu" autocomplete="username" required autofocus></label>
+    <label>Senha<input id="lp" type="password" autocomplete="current-password" required></label>
+    <div class="err" id="lerr"></div>
+    <button class="b p" type="submit">Entrar</button>
+  </form>
+</div>
+
+<div id="app">
 <header>
-  <h1>GS Flex</h1>
+  <h1>SALES <em>EXPRESS</em></h1>
   <nav id="nav">
     <button data-t="dash">Dashboard</button><button data-t="lanc">Lançamento</button>
     <button data-t="hist">Histórico</button><button data-t="rel">Relatórios</button>
-    <button data-t="transp">Transportadoras</button>
+    <button data-t="transp">Transportadoras</button><button data-t="conta">Conta</button>
   </nav>
+  <div class="who"><span id="usr"></span><button class="b" onclick="sair()">Sair</button></div>
 </header>
 <main>
   <div class="bar" id="per">
@@ -86,7 +127,19 @@ td input{width:90px;text-align:right}
     </div>
     <div class="w"><table><thead><tr><th>Nome</th><th>Shopee</th><th>Mercado Livre</th><th>Avulso</th><th></th></tr></thead><tbody id="tbody"></tbody></table></div>
   </section>
+
+  <section class="v" id="v-conta">
+    <p class="note">Preencha apenas o que deseja alterar. A senha atual é sempre obrigatória. Após salvar, você entra novamente com os dados novos.</p>
+    <form class="bar" onsubmit="salvarConta(event)">
+      <label>Novo usuário<input id="cu" autocomplete="off"></label>
+      <label>Nova senha (mín. 6)<input id="cs" type="password" autocomplete="new-password"></label>
+      <label>Repetir nova senha<input id="cs2" type="password" autocomplete="new-password"></label>
+      <label>Senha atual<input id="ca" type="password" autocomplete="current-password" required></label>
+      <button class="b p" type="submit">Salvar</button>
+    </form>
+  </section>
 </main>
+</div>
 <div id="toast"></div>
 
 <script>
@@ -102,14 +155,62 @@ function toast(m, err) {
   clearTimeout(toast.h); toast.h = setTimeout(() => t.style.display = 'none', 3500);
 }
 
+function mostrarLogin(msg) {
+  T = [];
+  $('#app').style.display = 'none';
+  $('#login').style.display = 'flex';
+  $('#lp').value = '';
+  $('#lerr').textContent = msg || '';
+  $('#lu').focus();
+}
+
 async function api(url, opt = {}) {
   const r = await fetch('/v1' + url, {headers: {'Content-Type': 'application/json'}, ...opt});
+  if (r.status === 401) {
+    mostrarLogin('Sessão expirada. Entre novamente.');
+    throw new Error('Sessão expirada. Entre novamente.');
+  }
   if (!r.ok) {
     let m = 'Erro ' + r.status;
     try { m = (await r.json()).message || m; } catch (e) {}
     throw new Error(m);
   }
   return (r.headers.get('content-type') || '').includes('pdf') ? r.blob() : r.json();
+}
+
+async function entrar(ev) {
+  ev.preventDefault();
+  $('#lerr').textContent = '';
+  try {
+    const r = await fetch('/v1/auth/login', {
+      method: 'POST',
+      headers: {'Content-Type': 'application/x-www-form-urlencoded'},
+      body: new URLSearchParams({username: $('#lu').value.trim(), password: $('#lp').value})
+    });
+    if (!r.ok) {
+      let m = 'Não foi possível entrar.';
+      try { m = (await r.json()).message || m; } catch (e) {}
+      $('#lerr').textContent = m;
+      return;
+    }
+    await iniciar();
+  } catch (e) { $('#lerr').textContent = 'Erro de conexão com o servidor.'; }
+}
+
+async function sair() {
+  try { await fetch('/v1/auth/logout', {method: 'POST'}); } catch (e) {}
+  mostrarLogin();
+}
+
+async function iniciar() {
+  try {
+    const c = await api('/conta');
+    $('#usr').textContent = c.usuario;
+    $('#login').style.display = 'none';
+    $('#app').style.display = 'block';
+    tab = 'dash';
+    quinz(new Date().getDate() <= 15 ? 1 : 2);
+  } catch (e) { /* 401: a tela de login já foi exibida */ }
 }
 
 function quinz(n) {
@@ -126,20 +227,58 @@ async function show(t) {
   $('#per').style.display = ['dash', 'hist', 'rel'].includes(tab) ? 'flex' : 'none';
   try {
     if (!T.length) T = await api('/transportadora');
-    await ({dash, lanc, hist, rel, transp})[tab]();
+    await ({dash, lanc, hist, rel, transp, conta})[tab]();
   } catch (e) { toast(e.message, true); }
 }
 
 const periodo = () => `inicio=${$('#ini').value}&fim=${$('#fim').value}`;
 
+function dias(ini, fim) {
+  const r = [], d = new Date(ini + 'T00:00:00'), f = new Date(fim + 'T00:00:00');
+  while (d <= f && r.length < 400) { r.push(iso(d)); d.setDate(d.getDate() + 1); }
+  return r;
+}
+
+function graficoTransp(lista) {
+  const ls = [...lista].sort((a, b) => b.totalPedidos - a.totalPedidos);
+  const max = Math.max(...ls.map(t => t.totalPedidos), 1);
+  return `<div class="g"><h2>Pedidos por transportadora</h2>${
+    ls.map(t => `<div class="hb"><span class="n" title="${esc(t.nome)}">${esc(t.nome)}</span>
+      <div class="tr"><div class="fl" style="width:${t.totalPedidos / max * 100}%"></div></div>
+      <span class="q">${t.totalPedidos}</span></div>`).join('')
+    || '<div class="empty">Sem dados no período.</div>'}</div>`;
+}
+
+function graficoDia(registros, ini, fim) {
+  const porDia = {};
+  registros.forEach(r => porDia[r.data] = (porDia[r.data] || 0)
+    + r.quantidaeShopee + r.quantidadeML + r.quantidadeAvulso);
+  const ds = dias(ini, fim), max = Math.max(...ds.map(d => porDia[d] || 0), 1);
+  const larg = Math.max(ds.length * 26, 0);
+  const valor = ds.length <= 31;
+  return `<div class="g"><h2>Total de pedidos por dia</h2><div class="vs"><div style="min-width:${larg}px">
+    <div class="vc">${ds.map(d => {
+      const v = porDia[d] || 0;
+      return `<div class="c" title="${br(d)}: ${v} pedidos">${valor && v ? `<b>${v}</b>` : ''}
+        <div class="bar ${v ? '' : 'z'}" style="height:${v / max * 100}%"></div></div>`;
+    }).join('')}</div>
+    <div class="vl">${ds.map(d => `<span>${d.slice(8)}</span>`).join('')}</div>
+  </div></div></div>`;
+}
+
 async function dash() {
-  const d = await api('/dashboard?' + periodo());
+  const [d, regs] = await Promise.all([
+    api('/dashboard?' + periodo()),
+    api(`/registro/diario?dataInicial=${$('#ini').value}&dataFinal=${$('#fim').value}`)
+  ]);
   const k = (t, v, s, c) => `<div class="k ${c || ''}"><small>${t}</small><b>${v}</b><br><i>${s}</i></div>`;
   $('#v-dash').innerHTML = `<div class="cards">
     ${k('Total a receber', brl(d.totalReceber), d.totalPedidos + ' pedidos', 't')}
     ${k('Shopee', brl(d.totalShopee), d.quantidadeShopee + ' pedidos')}
     ${k('Mercado Livre', brl(d.totalML), d.quantidadeML + ' pedidos')}
     ${k('Avulso', brl(d.totalAvulso), d.quantidadeAvulso + ' pedidos')}</div>
+    ${graficoTransp(d.transportadoras)}
+    ${graficoDia(regs, $('#ini').value, $('#fim').value)}
     <div class="w"><table><thead><tr><th>Transportadora</th><th>Pedidos</th><th>A receber</th></tr></thead><tbody>
     ${d.transportadoras.map(t => `<tr><td>${esc(t.nome)}</td><td>${t.totalPedidos}</td><td>${brl(t.totalReceber)}</td></tr>`).join('')
       || '<tr><td colspan="3" class="empty">Sem lançamentos neste período. Use a aba Lançamento para registrar pedidos.</td></tr>'}
@@ -192,7 +331,13 @@ async function gerarPdf() {
   try {
     const b = await api(`/relatorio/transportadora/${id}?` + periodo());
     const a = document.createElement('a');
-    a.href = URL.createObjectURL(b); a.download = `relatorio-${id}-${$('#ini').value}-${$('#fim').value}.pdf`; a.click();
+    const t = T.find(x => x.id == id);
+    const nome = (t ? t.nome : 'Relatorio').replace(/[\\/:*?"<>|]/g, '').trim();
+    const dt = s => s.split('-').reverse().join('-');
+    a.href = URL.createObjectURL(b);
+    a.download = `${nome} - ${dt($('#ini').value)} a ${dt($('#fim').value)}.pdf`;
+    a.click();
+    setTimeout(() => URL.revokeObjectURL(a.href), 1000);
     toast('Relatório gerado.');
   } catch (e) { toast(e.message, true); }
 }
@@ -226,10 +371,29 @@ async function excluirT(id) {
   catch (e) { toast(e.message, true); }
 }
 
+function conta() {
+  ['cu', 'cs', 'cs2', 'ca'].forEach(i => $('#' + i).value = '');
+  $('#cu').placeholder = $('#usr').textContent;
+}
+
+async function salvarConta(ev) {
+  ev.preventDefault();
+  const novoUsuario = $('#cu').value.trim(), novaSenha = $('#cs').value;
+  if (novaSenha !== $('#cs2').value) return toast('As senhas novas não conferem.', true);
+  if (!novoUsuario && !novaSenha) return toast('Informe um novo usuário ou uma nova senha.', true);
+  const body = {senhaAtual: $('#ca').value};
+  if (novoUsuario) body.novoUsuario = novoUsuario;
+  if (novaSenha) body.novaSenha = novaSenha;
+  try {
+    await api('/conta', {method: 'PUT', body: JSON.stringify(body)});
+    mostrarLogin('Dados alterados. Entre novamente.');
+  } catch (e) { toast(e.message, true); }
+}
+
 document.querySelectorAll('nav button').forEach(b => b.onclick = () => show(b.dataset.t));
 $('#ldata').value = iso(new Date());
 $('#ldata').onchange = () => lanc().catch(e => toast(e.message, true));
-quinz(new Date().getDate() <= 15 ? 1 : 2);
+iniciar();
 </script>
 </body>
 </html>

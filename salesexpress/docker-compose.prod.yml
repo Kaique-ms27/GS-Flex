@@ -1,0 +1,41 @@
+# Produção: aplicação + Caddy (HTTPS automático).
+# Sem PostgreSQL e sem pgAdmin: o banco é o Supabase.
+# Subir:  docker compose -f docker-compose.prod.yml up -d --build
+
+services:
+  app:
+    build: .
+    container_name: salesexpress-app
+    restart: unless-stopped
+    environment:
+      SPRING_PROFILES_ACTIVE: prod
+      DB_URL: ${DB_URL}
+      DB_USER: ${DB_USER}
+      DB_PASSWORD: ${DB_PASSWORD}
+      ADMIN_USUARIO: ${ADMIN_USUARIO}
+      ADMIN_SENHA: ${ADMIN_SENHA}
+      TZ: America/Sao_Paulo
+    expose:
+      - "8080"          # só visível para o Caddy, não para a internet
+    mem_limit: 3g       # folga dentro da VM de 6 GB
+
+  caddy:
+    image: caddy:2
+    container_name: salesexpress-caddy
+    restart: unless-stopped
+    depends_on:
+      - app
+    ports:
+      - "80:80"
+      - "443:443"
+      - "443:443/udp"
+    environment:
+      DOMAIN: ${DOMAIN}
+    volumes:
+      - ./Caddyfile:/etc/caddy/Caddyfile:ro
+      - caddy_data:/data        # guarda os certificados
+      - caddy_config:/config
+
+volumes:
+  caddy_data:
+  caddy_config:
